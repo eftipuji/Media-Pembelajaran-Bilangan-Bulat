@@ -379,6 +379,30 @@ def masuk_siswa(nama, kelas, pin):
     return {"id": sid, "nama": nama, "kelas": kelas}, None
 
 
+def daftar_siswa(nama, kelas, pin):
+    nama = " ".join(nama.split()).title()
+    kelas = " ".join(kelas.split()).upper()
+    ada = q("SELECT id FROM siswa WHERE lower(nama)=? AND lower(kelas)=?",
+            (nama.lower(), kelas.lower()), one=True)
+    if ada:
+        return None, "Nama dan kelas ini sudah terdaftar. Silakan pilih Masuk."
+    sid = q("INSERT INTO siswa(nama,kelas,pin_hash,dibuat) VALUES(?,?,?,?)",
+            (nama, kelas, hash_pin(pin), sekarang().strftime("%Y-%m-%d %H:%M")), commit=True)
+    return {"id": sid, "nama": nama, "kelas": kelas}, None
+
+
+def login_siswa(nama, kelas, pin):
+    nama = " ".join(nama.split()).title()
+    kelas = " ".join(kelas.split()).upper()
+    row = q("SELECT * FROM siswa WHERE lower(nama)=? AND lower(kelas)=?",
+            (nama.lower(), kelas.lower()), one=True)
+    if not row:
+        return None, "Akun belum terdaftar. Silakan pilih Daftar dulu."
+    if row["pin_hash"] != hash_pin(pin):
+        return None, "PIN-nya tidak cocok. Pakai PIN yang kamu buat saat mendaftar."
+    return {"id": row["id"], "nama": row["nama"], "kelas": row["kelas"]}, None
+
+
 def get_selesai(sid):
     return {r["materi"] for r in q("SELECT materi FROM progres WHERE siswa_id=?", (sid,))}
 
@@ -591,28 +615,54 @@ def halaman_login():
     t1, t2 = st.tabs(["Siswa", "Guru"])
 
     with t1:
-        st.write("Baru pertama kali? Isi nama dan kelas, lalu buat PIN 4 angka. "
-                 "Berikutnya, masuk dengan data yang sama supaya kemajuan belajarmu tersimpan.")
-        with st.form("form_siswa"):
-            nama = st.text_input("Nama lengkap", placeholder="Contoh: Budi Santoso")
-            kelas = st.text_input("Kelas", placeholder="Contoh: VII A")
-            pin = st.text_input("PIN (4 angka)", type="password", max_chars=4)
-            ok = st.form_submit_button("Masuk", type="primary")
-        if ok:
-            if len(nama.strip()) < 3:
-                st.error("Nama minimal 3 huruf.")
-            elif not kelas.strip():
-                st.error("Kelas belum diisi.")
-            elif not (pin.isdigit() and len(pin) == 4):
-                st.error("PIN harus 4 angka.")
-            else:
-                data, err = masuk_siswa(nama, kelas, pin)
-                if err:
-                    st.error(err)
+        mode = st.radio("Pilih", ["Masuk", "Daftar"], horizontal=True,
+                        label_visibility="collapsed", key="mode_login")
+        if mode == "Masuk":
+            st.write("Sudah punya akun? Isi nama, kelas, dan PIN yang kamu buat saat mendaftar.")
+            with st.form("form_masuk"):
+                nama = st.text_input("Nama lengkap", placeholder="Contoh: Budi Santoso")
+                kelas = st.text_input("Kelas", placeholder="Contoh: VII A")
+                pin = st.text_input("PIN (4 angka)", type="password", max_chars=4)
+                ok = st.form_submit_button("Masuk", type="primary")
+            if ok:
+                if not nama.strip() or not kelas.strip():
+                    st.error("Nama dan kelas harus diisi.")
+                elif not (pin.isdigit() and len(pin) == 4):
+                    st.error("PIN harus 4 angka.")
                 else:
-                    st.session_state.siswa = data
-                    st.session_state.menu = "beranda"
-                    st.rerun()
+                    data, err = login_siswa(nama, kelas, pin)
+                    if err:
+                        st.error(err)
+                    else:
+                        st.session_state.siswa = data
+                        st.session_state.menu = "beranda"
+                        st.rerun()
+        else:
+            st.write("Belum punya akun? Isi nama dan kelas, lalu buat PIN 4 angka. "
+                     "Ingat PIN-nya, karena dipakai setiap kali masuk.")
+            with st.form("form_daftar"):
+                nama = st.text_input("Nama lengkap", placeholder="Contoh: Budi Santoso")
+                kelas = st.text_input("Kelas", placeholder="Contoh: VII A")
+                pin = st.text_input("Buat PIN (4 angka)", type="password", max_chars=4)
+                pin2 = st.text_input("Ulangi PIN", type="password", max_chars=4)
+                ok = st.form_submit_button("Daftar", type="primary")
+            if ok:
+                if len(nama.strip()) < 3:
+                    st.error("Nama minimal 3 huruf.")
+                elif not kelas.strip():
+                    st.error("Kelas belum diisi.")
+                elif not (pin.isdigit() and len(pin) == 4):
+                    st.error("PIN harus 4 angka.")
+                elif pin != pin2:
+                    st.error("PIN dan ulangi PIN tidak sama.")
+                else:
+                    data, err = daftar_siswa(nama, kelas, pin)
+                    if err:
+                        st.error(err)
+                    else:
+                        st.session_state.siswa = data
+                        st.session_state.menu = "beranda"
+                        st.rerun()
 
     with t2:
         with st.form("form_guru"):
