@@ -523,11 +523,11 @@ def tampil_ketercapaian(sid, selesai):
     baris = []
     for k in URUTAN:
         if k in selesai:
-            tg = '<span class="tag selesai">Selesai</span>'
+            tg = '<span class="tag selesai">✅ Selesai</span>'
         elif akses_terbuka(k, selesai):
-            tg = '<span class="tag buka">Bisa dibuka</span>'
+            tg = '<span class="tag buka">▶️ Bisa dibuka</span>'
         else:
-            tg = '<span class="tag kunci">Terkunci</span>'
+            tg = '<span class="tag kunci">🔒 Terkunci</span>'
         baris.append([NAMA_HALAMAN[k], tg])
     tabel(["Tahap", "Status"], baris)
 
@@ -576,7 +576,7 @@ def blok_selesai(kp):
 def tampil_terkunci(halaman, selesai):
     idx = URUTAN.index(halaman)
     syarat = URUTAN[idx - 1]
-    st.markdown(f"## {NAMA_HALAMAN[halaman]}")
+    st.markdown(f"## 🔒 {NAMA_HALAMAN[halaman].split(' ', 1)[1]}")
     kotak(f"Halaman ini belum bisa dibuka. Selesaikan dulu <b>{NAMA_HALAMAN[syarat]}</b>. "
           "Urutan belajarnya: KP 1, KP 2, KP 3, lalu Latihan Soal.", "catatan")
     target = next((k for k in URUTAN if k not in selesai), URUTAN[0])
@@ -910,15 +910,18 @@ with st.sidebar:
         base = NAMA_HALAMAN[k]
         if is_guru() or k not in URUTAN:
             return base
+        teks = base.split(" ", 1)[1]  # nama tanpa ikon di depan
         if k in SELESAI:
-            return base + "  ✓"
+            return "✅ " + teks
         if akses_terbuka(k, SELESAI):
             return base
-        return base + "  (terkunci)"
+        return "🔒 " + teks + " (terkunci)"
 
     st.markdown('<div class="kecil" style="margin-top:.8rem;">Menu</div>', unsafe_allow_html=True)
     tab_choice = st.radio("Menu", options=opsi_menu, key="menu",
                           format_func=label_menu, label_visibility="collapsed")
+    if not is_guru():
+        st.caption("✅ selesai · 🔒 terkunci (selesaikan tahap sebelumnya dulu)")
 
     st.divider()
     st.markdown("""
