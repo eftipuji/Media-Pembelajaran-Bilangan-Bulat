@@ -29,23 +29,23 @@ WIB = ZoneInfo("Asia/Jakarta")
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data_belajar.db")
 
 # Warna dipakai konsisten di seluruh aplikasi
-C_UTAMA = "#1F5C99"
+C_UTAMA = "#1A3C6E"
 C_TEKS = "#1F2933"
-C_REDUP = "#5F6B7A"
-C_POS = "#2E7D32"
-C_NEG = "#B3261E"
-C_CATATAN = "#B7791F"
+C_REDUP = "#7F7F7F"
+C_POS = "#70AD47"
+C_NEG = "#C00000"
+C_CATATAN = "#ED7D31"
 
 URUTAN = ["kp1", "kp2", "kp3", "latihan"]
 
 NAMA_HALAMAN = {
-    "dashboard": "Dashboard Guru",
-    "beranda": "Beranda",
-    "kp1": "KP 1 · Garis Bilangan",
-    "kp2": "KP 2 · Operasi Hitung",
-    "kp3": "KP 3 · Faktor, FPB, dan KPK",
-    "latihan": "Latihan Soal",
-    "video": "Video Materi",
+    "dashboard": "📊 Dashboard Guru",
+    "beranda": "🏠 Beranda",
+    "kp1": "📍 KP 1 · Garis Bilangan",
+    "kp2": "🔧 KP 2 · Operasi Hitung",
+    "kp3": "🌳 KP 3 · Faktor, FPB, dan KPK",
+    "latihan": "📝 Latihan Soal",
+    "video": "🎬 Video Materi",
 }
 
 LENCANA = [
@@ -144,79 +144,95 @@ SOAL_LIST = [
 # ─────────────────────────────────────────
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
     html, body, [class*="css"], .stMarkdown, .stButton button, input, textarea, label {
-        font-family: 'Lexend', sans-serif;
+        font-family: 'Nunito', sans-serif;
     }
     #MainMenu { visibility: hidden; }
     footer { visibility: hidden; }
     .block-container { padding-top: 2rem; max-width: 1100px; }
 
-    /* Judul */
-    .judul-app { border-bottom: 2px solid #1F5C99; padding-bottom: .7rem; margin-bottom: 1.3rem; }
-    .judul-app .atas { font-size: .78rem; color: #5F6B7A; letter-spacing: .06em; text-transform: uppercase; }
-    .judul-app h1 { font-size: 1.9rem; font-weight: 600; margin: .1rem 0 .1rem; padding: 0; color: #1F2933; }
-    .judul-app p { color: #5F6B7A; margin: 0; font-size: .95rem; }
+    /* Banner judul */
+    .judul-app {
+        background: linear-gradient(135deg, #1A3C6E 0%, #2E75B6 60%, #70AD47 100%);
+        color: white; padding: 1.4rem 2rem; border-radius: 16px;
+        text-align: center; margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px rgba(26,60,110,0.3);
+    }
+    .judul-app .atas { font-size: .8rem; opacity: .85; letter-spacing: .08em; text-transform: uppercase; }
+    .judul-app h1 { font-size: 2rem; font-weight: 800; margin: .1rem 0; padding: 0; color: white; }
+    .judul-app p { margin: .2rem 0 0; opacity: .92; font-size: 1rem; color: white; }
 
-    /* Langkah belajar */
-    .langkah { border-left: 3px solid #1F5C99; padding: .25rem 0 .25rem .9rem; margin: 1.1rem 0 .6rem; }
-    .langkah-judul { font-weight: 600; color: #1F5C99; font-size: .95rem; }
-    .langkah-judul .istilah { font-weight: 400; color: #8A94A0; font-size: .75rem; margin-left: .5rem; }
-    .langkah-isi { color: #1F2933; font-size: .95rem; margin-top: .25rem; line-height: 1.65; }
+    /* Langkah belajar (warna diatur per langkah) */
+    .langkah { padding: .75rem 1rem; border-radius: 0 10px 10px 0; margin: .8rem 0; border-left: 5px solid; }
+    .langkah-judul { font-weight: 800; font-size: .85rem; text-transform: uppercase; letter-spacing: .5px; }
+    .langkah-judul .istilah { font-weight: 600; opacity: .7; font-size: .72rem; margin-left: .6rem;
+                              text-transform: none; letter-spacing: 0; }
+    .langkah-isi { color: #2C3E50; font-size: .95rem; margin-top: .3rem; line-height: 1.65; }
 
     /* Kotak informasi */
     .kotak {
-        background: #F7F9FB; border: 1px solid #DDE3EA; border-left: 4px solid #1F5C99;
-        border-radius: 6px; padding: .8rem 1rem; margin: .5rem 0;
-        color: #1F2933; font-size: .92rem; line-height: 1.6;
+        background: #F0F7FF; border: 1px solid #BDD7EE; border-radius: 12px;
+        padding: 1rem 1.2rem; margin: .5rem 0; color: #2C3E50; font-size: .92rem; line-height: 1.6;
     }
-    .kotak.catatan { background: #FFFAF0; border-color: #EBDDBF; border-left-color: #B7791F; }
-    .kotak.benar   { background: #F3F9F4; border-color: #CFE5D1; border-left-color: #2E7D32; }
-    .kotak.salah   { background: #FDF5F4; border-color: #F0D3D0; border-left-color: #B3261E; }
-    .kotak.netral  { border-left-color: #8A94A0; }
+    .kotak.catatan { background: #FFF8E6; border-color: #FFD966; }
+    .kotak.benar   { background: #F0FBF0; border-color: #70AD47; }
+    .kotak.salah   { background: #FEF0F0; border-color: #E74C3C; }
+    .kotak.streak  { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-color: #FFB74D; color: #5D4037; }
 
-    /* Angka besar (hasil) */
+    /* Kartu angka / hasil */
     .angka {
-        border: 1px solid #DDE3EA; border-radius: 8px; background: #FFFFFF;
-        text-align: center; padding: .9rem; margin: .5rem 0;
+        background: linear-gradient(135deg, #1A3C6E, #2E75B6); color: white;
+        border-radius: 16px; padding: 1.1rem; text-align: center; margin: .5rem 0;
+        box-shadow: 0 4px 15px rgba(26,60,110,0.3);
     }
-    .angka .label { font-size: .8rem; color: #5F6B7A; }
-    .angka .nilai { font-size: 2.6rem; font-weight: 600; color: #1F5C99; line-height: 1.15; }
-    .angka .rumus { font-size: 1.15rem; font-weight: 500; color: #1F2933; margin: .2rem 0 .4rem; }
-    .angka .ket { font-size: .85rem; color: #5F6B7A; margin-top: .2rem; }
+    .angka.merah { background: linear-gradient(135deg, #C00000, #E74C3C); }
+    .angka.hijau { background: linear-gradient(135deg, #70AD47, #27AE60); }
+    .angka .label { font-size: .85rem; opacity: .85; }
+    .angka .nilai { font-size: 2.8rem; font-weight: 800; color: white; line-height: 1.1; }
+    .angka .rumus { font-size: 1.3rem; font-weight: 800; margin: .2rem 0 .4rem; }
+    .angka .ket { font-size: .85rem; opacity: .9; margin-top: .2rem; }
 
     /* Tabel */
     .tabel { width: 100%; border-collapse: collapse; font-size: .88rem; margin: .4rem 0; }
-    .tabel th { background: #EEF2F6; color: #1F2933; text-align: center; padding: 7px; border: 1px solid #DDE3EA; font-weight: 600; }
-    .tabel td { padding: 7px; border: 1px solid #DDE3EA; text-align: center; color: #1F2933; }
-    .pos { color: #2E7D32; font-weight: 600; }
-    .neg { color: #B3261E; font-weight: 600; }
+    .tabel th { background: #1A3C6E; color: white; text-align: center; padding: 8px; border: 1px solid #ccc; font-weight: 700; }
+    .tabel td { padding: 7px; border: 1px solid #ccc; text-align: center; color: #2C3E50; }
+    .tabel tr:nth-child(even) td { background: #F8FAFF; }
+    .pos { color: #4C9A2A; font-weight: 800; }
+    .neg { color: #C00000; font-weight: 800; }
 
-    /* Label status kecil */
-    .tag { display: inline-block; padding: 1px 9px; border-radius: 10px; font-size: .75rem; border: 1px solid; }
-    .tag.selesai { color: #2E7D32; border-color: #2E7D32; }
-    .tag.buka { color: #1F5C99; border-color: #1F5C99; }
-    .tag.kunci { color: #8A94A0; border-color: #C5CCD4; }
+    /* Label status */
+    .tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: .75rem; font-weight: 700; color: white; }
+    .tag.selesai { background: #70AD47; }
+    .tag.buka { background: #2E75B6; }
+    .tag.kunci { background: #BDBDBD; }
 
-    /* Kemajuan harian */
-    .lencana { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: .75rem;
-               border: 1px solid #C5CCD4; color: #8A94A0; margin: 2px 4px 2px 0; }
-    .lencana.aktif { background: #1F5C99; border-color: #1F5C99; color: #FFFFFF; }
-    .streak-angka { font-size: 2rem; font-weight: 600; color: #1F5C99; line-height: 1; }
+    /* Streak & lencana */
+    .lencana { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: .75rem; font-weight: 700;
+               background: #EEEEEE; color: #9E9E9E; margin: 2px 4px 2px 0; }
+    .lencana.aktif { background: #ED7D31; color: white; }
+    .streak-angka { font-size: 2rem; font-weight: 800; color: #1A3C6E; line-height: 1; }
+    .kotak.streak .streak-angka { color: #E65100; }
     .kecil { font-size: .8rem; color: #5F6B7A; }
+    .kotak.streak .kecil { color: #795548; }
 
     /* Kartu soal */
-    .soal { border: 1px solid #DDE3EA; border-radius: 8px; padding: .9rem 1.1rem; margin: 1rem 0 .3rem; background: #FFFFFF; }
-    .soal .meta { font-size: .78rem; color: #5F6B7A; margin-bottom: .3rem; }
-    .soal .tanya { font-size: .98rem; font-weight: 500; color: #1F2933; }
-    .soal .konteks { margin-top: .4rem; font-size: .88rem; color: #5F6B7A; }
+    .soal { border: 1px solid #E0E0E0; border-left: 5px solid #2E75B6; border-radius: 12px;
+            padding: .9rem 1.1rem; margin: 1rem 0 .3rem; background: #FFFFFF; }
+    .soal .meta { font-size: .78rem; color: #5F6B7A; margin-bottom: .4rem; }
+    .soal .tanya { font-size: .98rem; font-weight: 700; color: #2C3E50; }
+    .soal .konteks { margin-top: .5rem; background: #FFF8E6; padding: .5rem .8rem; border-radius: 8px;
+                     font-size: .88rem; color: #8B6914; }
 
     /* Sidebar */
-    .sidebar-judul { font-weight: 600; color: #1F2933; margin-bottom: .4rem; }
+    .sidebar-judul { background: #1A3C6E; color: white; padding: .6rem 1rem; border-radius: 10px;
+                     font-weight: 800; text-align: center; margin-bottom: .5rem; }
 
-    .stButton > button { border-radius: 6px; font-weight: 500; }
-    hr { border: none; border-top: 1px solid #E3E8EE; margin: 1.4rem 0; }
+    .stButton > button { border-radius: 10px; font-weight: 700; transition: all .2s; }
+    .stButton > button:hover { transform: translateY(-2px); }
+    [data-testid="metric-container"] { background: #F8FAFF; border: 1px solid #BDD7EE; border-radius: 12px; padding: .8rem; }
+    hr { border: none; border-top: 2px solid #EBF3FB; margin: 1.5rem 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -224,10 +240,22 @@ st.markdown("""
 # ══════════════════════════════════════════
 # KOMPONEN TAMPILAN (dipakai berulang)
 # ══════════════════════════════════════════
+LANGKAH_WARNA = {
+    1: ("#2E75B6", "#EBF3FB"),
+    2: ("#ED7D31", "#FFF4EC"),
+    3: ("#70AD47", "#F0FBF0"),
+    4: ("#7030A0", "#F5EFFF"),
+    5: ("#C00000", "#FEF0F0"),
+    6: ("#1A3C6E", "#EBF3FB"),
+}
+
+
 def langkah(no, judul, isi, istilah=""):
+    c, bg = LANGKAH_WARNA[no]
     ist = f'<span class="istilah">{istilah}</span>' if istilah else ""
     st.markdown(
-        f'<div class="langkah"><div class="langkah-judul">Langkah {no} · {judul}{ist}</div>'
+        f'<div class="langkah" style="border-color:{c};background:{bg};">'
+        f'<div class="langkah-judul" style="color:{c};">Langkah {no} · {judul}{ist}</div>'
         f'<div class="langkah-isi">{isi}</div></div>', unsafe_allow_html=True)
 
 
@@ -451,8 +479,8 @@ def tampil_streak(sid):
     for i in range(6, -1, -1):
         d = today - timedelta(days=i)
         aktif = d in tgl
-        bg = C_UTAMA if aktif else "#E3E8EE"
-        isi = "✓" if aktif else ""
+        bg = "#FF9800" if aktif else "#E0E0E0"
+        isi = "🔥" if aktif else ""
         tebal = f"outline:2px solid {C_UTAMA};outline-offset:2px;" if d == today else ""
         titik += (
             '<div style="text-align:center;">'
@@ -472,8 +500,8 @@ def tampil_streak(sid):
     target = f"{berikut - cur} hari lagi untuk lencana berikutnya." if berikut else "Semua lencana sudah kamu dapat."
 
     st.markdown(f"""
-    <div class="kotak netral">
-    <div class="kecil">Belajar berturut-turut</div>
+    <div class="kotak streak">
+    <div class="kecil">🔥 Belajar berturut-turut</div>
     <div><span class="streak-angka">{cur}</span> hari</div>
     <div class="kecil">Rekor: {best} hari · Total hari belajar: {len(tgl)}</div>
     <div style="display:flex;gap:10px;justify-content:space-between;margin:.8rem 0 .4rem;">{titik}</div>
@@ -512,7 +540,7 @@ def tampil_ketercapaian(sid, selesai):
 
 def blok_selesai(kp):
     st.divider()
-    st.markdown("### Cek pemahaman")
+    st.markdown("### 🏁 Cek pemahaman")
     if is_guru():
         kotak("Mode guru: bagian ini hanya pratinjau dan tidak dicatat.", "netral")
         return
@@ -559,7 +587,7 @@ def tampil_terkunci(halaman, selesai):
 # HALAMAN MASUK
 # ══════════════════════════════════════════
 def halaman_login():
-    st.markdown("## Masuk")
+    st.markdown("## 🔐 Masuk")
     t1, t2 = st.tabs(["Siswa", "Guru"])
 
     with t1:
@@ -603,7 +631,7 @@ def halaman_login():
 # DASHBOARD GURU
 # ══════════════════════════════════════════
 def halaman_dashboard():
-    st.markdown("## Dashboard Guru")
+    st.markdown("## 📊 Dashboard Guru")
     today = hari_ini()
 
     siswa = baca_df("SELECT id,nama,kelas,dibuat FROM siswa ORDER BY kelas,nama")
@@ -843,8 +871,8 @@ def ulangi_latihan():
 # ══════════════════════════════════════════
 st.markdown("""
 <div class="judul-app">
-    <div class="atas">Matematika · Kelas VII</div>
-    <h1>Bilangan Bulat</h1>
+    <div class="atas">Matematika · SMP/MTs Kelas VII</div>
+    <h1>🔢 Jelajah Bilangan Bulat</h1>
     <p>Coba sendiri dengan kalkulator, temukan polanya, lalu tulis kesimpulanmu.</p>
 </div>
 """, unsafe_allow_html=True)
@@ -936,24 +964,24 @@ if tab_choice == "dashboard":
 # ══════════════════════════════════════════
 elif tab_choice == "beranda":
     if SID:
-        st.markdown(f"## Halo, {SISWA['nama'].split()[0]}")
+        st.markdown(f"## 👋 Halo, {SISWA['nama'].split()[0]}")
         st.write("Di sini kamu belajar bilangan bulat dengan cara mencoba sendiri, bukan hanya membaca rumus. "
                  "Kerjakan kegiatan secara berurutan, dan catat hasilnya di LKS.")
         c1, c2 = st.columns(2)
         with c1:
-            st.markdown("#### Kemajuan belajarmu")
+            st.markdown("#### 🎯 Kemajuan belajarmu")
             tampil_ketercapaian(SID, SELESAI)
         with c2:
-            st.markdown("#### Belajar harian")
+            st.markdown("#### 🔥 Belajar harian")
             tampil_streak(SID)
         st.button("Lanjutkan belajar", type="primary", on_click=pindah,
                   args=(next((k for k in URUTAN if k not in SELESAI), "latihan"),))
     else:
-        st.markdown("## Beranda")
+        st.markdown("## 🏠 Beranda")
         st.write("Anda masuk sebagai guru. Dashboard pemantauan ada di menu paling atas.")
 
     st.divider()
-    st.markdown("#### Yang akan kamu pelajari")
+    st.markdown("#### 📚 Yang akan kamu pelajari")
     tabel(["Kegiatan", "Isi", "Capaian"], [
         ["KP 1", "Bilangan bulat, garis bilangan, dan lawan (invers) suatu bilangan", "Memahami bilangan bulat"],
         ["KP 2", "Penjumlahan, pengurangan, perkalian, dan pembagian bilangan bulat", "TP 5 · Operasi hitung"],
@@ -961,15 +989,25 @@ elif tab_choice == "beranda":
         ["Latihan", "Soal cerita sehari-hari, termasuk soal keuangan sederhana", "TP 9 · Masalah kontekstual"],
     ])
 
-    st.markdown("#### Cara kerja setiap kegiatan")
-    tabel(["Langkah", "Yang kamu lakukan"], [
-        ["1. Coba pikirkan", "Baca situasi atau pertanyaan di awal kegiatan."],
-        ["2. Tulis dugaanmu", "Tulis dugaanmu di LKS sebelum mencoba."],
-        ["3. Ayo coba", "Pakai kalkulator, lalu catat hasilnya di LKS."],
-        ["4. Cari polanya", "Lihat hasil yang kamu catat. Apa yang selalu sama?"],
-        ["5. Cocokkan", "Bandingkan hasilmu dengan teman satu kelompok."],
-        ["6. Tarik kesimpulan", "Tulis kesimpulan dengan kata-katamu sendiri."],
-    ])
+    st.markdown("#### 🔬 Cara kerja setiap kegiatan")
+    cara = [
+        ("1 · Coba pikirkan", "Baca situasi atau pertanyaan di awal kegiatan."),
+        ("2 · Tulis dugaanmu", "Tulis dugaanmu di LKS sebelum mencoba."),
+        ("3 · Ayo coba", "Pakai kalkulator, lalu catat hasilnya di LKS."),
+        ("4 · Cari polanya", "Lihat hasil yang kamu catat. Apa yang selalu sama?"),
+        ("5 · Cocokkan", "Bandingkan hasilmu dengan teman satu kelompok."),
+        ("6 · Tarik kesimpulan", "Tulis kesimpulan dengan kata-katamu sendiri."),
+    ]
+    kolom_cara = st.columns(3)
+    for i, (jdl, isi) in enumerate(cara):
+        warna, latar = LANGKAH_WARNA[i + 1]
+        with kolom_cara[i % 3]:
+            st.markdown(
+                f'<div style="border-left:5px solid {warna};background:{latar};padding:.8rem 1rem;'
+                f'border-radius:0 10px 10px 0;margin-bottom:.8rem;">'
+                f'<div style="font-weight:800;color:{warna};font-size:.9rem;">{jdl}</div>'
+                f'<div style="font-size:.85rem;color:#444;margin-top:.3rem;">{isi}</div></div>',
+                unsafe_allow_html=True)
     kotak("<b>Catatan:</b> jangan langsung menekan-nekan kalkulator. Tulis dugaanmu dulu, "
           "baru buktikan dengan kalkulator apakah dugaanmu benar.", "catatan")
 
@@ -978,7 +1016,7 @@ elif tab_choice == "beranda":
 # KP 1 — GARIS BILANGAN
 # ══════════════════════════════════════════
 elif tab_choice == "kp1":
-    st.markdown("## KP 1 · Memahami Bilangan Bulat")
+    st.markdown("## 📍 KP 1 · Memahami Bilangan Bulat")
 
     langkah(1, "Coba pikirkan",
             "Puncak gunung berada di <b>+3.000 meter</b> di atas permukaan laut. "
@@ -1074,7 +1112,7 @@ elif tab_choice == "kp1":
 # KP 2 — OPERASI HITUNG
 # ══════════════════════════════════════════
 elif tab_choice == "kp2":
-    st.markdown("## KP 2 · Operasi Hitung Bilangan Bulat")
+    st.markdown("## 🔧 KP 2 · Operasi Hitung Bilangan Bulat")
 
     langkah(1, "Coba pikirkan",
             "Sebuah klub sepak bola melepas 3 pemain yang bermain buruk. Kalau ditulis sebagai perkalian, "
@@ -1189,7 +1227,7 @@ elif tab_choice == "kp2":
 # KP 3 — FAKTOR, FPB, KPK
 # ══════════════════════════════════════════
 elif tab_choice == "kp3":
-    st.markdown("## KP 3 · Faktor, FPB, dan KPK")
+    st.markdown("## 🌳 KP 3 · Faktor, FPB, dan KPK")
 
     langkah(1, "Coba pikirkan",
             "Ibu punya <b>24 kue nastar</b> dan <b>36 kue cokelat</b>. Ibu ingin membaginya ke beberapa piring "
@@ -1261,7 +1299,7 @@ elif tab_choice == "kp3":
                          "-", color="#B8C0CA", lw=1.5, zorder=1)
 
             for nid, x, y, label, is_p, is_root in nodes_list:
-                color = C_UTAMA if is_root else (C_POS if is_p else "#7A8794")
+                color = C_UTAMA if is_root else (C_POS if is_p else "#2E75B6")
                 ax2.scatter([x], [y], s=620 if is_root else 440, c=color, zorder=3,
                             edgecolors="white", linewidths=2)
                 ax2.text(x, y, label, ha="center", va="center", fontsize=10,
@@ -1271,7 +1309,7 @@ elif tab_choice == "kp3":
             ax2.legend(handles=[
                 mpatches.Patch(facecolor=C_UTAMA, label="Bilangan awal"),
                 mpatches.Patch(facecolor=C_POS, label="Faktor prima"),
-                mpatches.Patch(facecolor="#7A8794", label="Belum prima (dipecah lagi)"),
+                mpatches.Patch(facecolor="#2E75B6", label="Faktor komposit (dipecah lagi)"),
             ], loc="lower right", fontsize=9, frameon=False)
             st.pyplot(fig2)
             plt.close()
@@ -1312,7 +1350,7 @@ elif tab_choice == "kp3":
             fpb_str = " × ".join([f"{p}" + (f"^{min(fp1.get(p, 0), fp2.get(p, 0))}" if min(fp1.get(p, 0), fp2.get(p, 0)) > 1 else "")
                                   for p in semua_p if min(fp1.get(p, 0), fp2.get(p, 0)) > 0]) or "1"
             st.markdown(f"""
-            <div class="angka">
+            <div class="angka merah">
                 <div class="label">FPB({bil1}, {bil2})</div>
                 <div class="ket">= {fpb_str}</div>
                 <div class="nilai">{fpb}</div>
@@ -1326,7 +1364,7 @@ elif tab_choice == "kp3":
             kpk_str = " × ".join([f"{p}" + (f"^{max(fp1.get(p, 0), fp2.get(p, 0))}" if max(fp1.get(p, 0), fp2.get(p, 0)) > 1 else "")
                                   for p in semua_p if max(fp1.get(p, 0), fp2.get(p, 0)) > 0])
             st.markdown(f"""
-            <div class="angka">
+            <div class="angka hijau">
                 <div class="label">KPK({bil1}, {bil2})</div>
                 <div class="ket">= {kpk_str}</div>
                 <div class="nilai">{kpk}</div>
@@ -1352,7 +1390,7 @@ elif tab_choice == "kp3":
 # LATIHAN SOAL
 # ══════════════════════════════════════════
 elif tab_choice == "latihan":
-    st.markdown("## Latihan Soal")
+    st.markdown("## 📝 Latihan Soal")
     kotak("<b>Sebelum mulai:</b> kerjakan sendiri dulu. Pakai kalkulator hanya untuk mengecek jawabanmu, "
           "bukan untuk mencari jawaban. Waktunya sekitar 45 menit.<br>"
           "Untuk soal isian yang jawabannya beberapa bilangan, pisahkan dengan koma.", "catatan")
@@ -1365,11 +1403,12 @@ elif tab_choice == "latihan":
     detail_map = {d["no"]: d for d in hasil_latihan["detail"]} if sudah_submit else {}
 
     for soal in SOAL_LIST:
+        kp_color = {"KP 1": "#2E75B6", "KP 2": "#70AD47", "KP 3": "#ED7D31"}[soal["kp"]]
         konteks_html = f'<div class="konteks">{soal["konteks"]}</div>' if soal["konteks"] else ""
         tipe = "Pilihan ganda" if soal["tipe"] == "PG" else "Isian"
         st.markdown(f"""
-        <div class="soal">
-            <div class="meta">Soal {soal['no']} · {soal['kp']} · {tipe}</div>
+        <div class="soal" style="border-left-color:{kp_color};">
+            <div class="meta"><span style="background:{kp_color};color:white;padding:2px 10px;border-radius:20px;font-weight:700;">{soal['kp']}</span> &nbsp;Soal {soal['no']} · {tipe}</div>
             <div class="tanya">{soal['soal']}</div>
             {konteks_html}
         </div>
@@ -1415,13 +1454,13 @@ elif tab_choice == "latihan":
             <div class="label">Nilaimu</div>
             <div class="nilai">{persen:.0f}</div>
             <div class="ket">{skor_total} dari {len(SOAL_LIST)} soal benar</div>
-            <div class="ket" style="color:#1F2933;margin-top:.5rem;">{pesan}</div>
+            <div class="ket" style="margin-top:.5rem;">{pesan}</div>
         </div>
         """, unsafe_allow_html=True)
         st.caption("Nilaimu sudah tersimpan dan bisa dilihat guru. Kamu boleh mengulang untuk memperbaiki nilai.")
 
         st.divider()
-        st.markdown("### Refleksi")
+        st.markdown("### 🔍 Refleksi")
         st.write("Jawab dengan jujur dan apa adanya. Tidak ada jawaban yang salah.")
         r1 = st.text_area("1. Bagian mana dari aplikasi ini yang paling membantumu memahami bilangan bulat? Kenapa?",
                           height=80, key="r1")
@@ -1441,7 +1480,7 @@ elif tab_choice == "latihan":
 # VIDEO MATERI
 # ══════════════════════════════════════════
 elif tab_choice == "video":
-    st.markdown("## Video Materi")
+    st.markdown("## 🎬 Video Materi")
     st.write("Tonton video ini sebelum atau sesudah mencoba kalkulator. "
              "Catat hal penting yang kamu dapat di LKS.")
     st.video("https://youtu.be/cQAwIhfC6Dg")
